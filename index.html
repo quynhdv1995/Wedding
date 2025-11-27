@@ -3,302 +3,548 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thiệp Mời Cưới – Phạm Thị Lý & Đỗ Văn Quỳnh</title>
+<title>Thiệp cưới Quỳnh ❤️ Lý</title>
 
-<!-- FONT -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;600&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body {
-    margin: 0;
-    background: #faf7f5;
-    font-family: 'Inter', sans-serif;
-    color: #4a3f35;
-    overflow-x: hidden;
+    margin:0;
+    background:#f7f3ef;
+    font-family:"Roboto", sans-serif;
+    color:#4b3f3f;
+    text-align:center;
 }
 
-/* Canvas hiệu ứng cánh hoa rơi */
-#petals-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: -1;
+/* Slider */
+.slider {
+    width:92%;
+    height:65vh;
+    margin:20px auto;
+    position:relative;
+    overflow:hidden;
+    border-radius:20px;
+    box-shadow:0 6px 22px rgba(0,0,0,0.12);
+}
+.slide {
+    position:absolute;
+    width:100%;
+    height:100%;
+    opacity:0;
+    transition:opacity 1.4s ease-in-out;
+}
+.slide.active {
+    opacity:1;
+}
+.slide img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center top;
+    border-radius:20px;
 }
 
-.fade-section {
+/* Lời mời */
+.invite-title {
+    font-family:"Playfair Display", serif;
+    font-size:20px;
+    text-transform:uppercase;
+    color:#b07a7a;
+    letter-spacing:2px;
+    margin-top:10px;
+}
+.names {
+    font-family:"Great Vibes", cursive;
+    font-size:58px;
+    color:#b55b5b;
+    margin:10px 0 20px 0;
+}
+
+/* Popup RSVP */
+.popup {
+    position:fixed;
+    bottom:-100%;
+    left:0;
+    width:100%;
+    background:white;
+    padding:30px;
+    border-radius:25px 25px 0 0;
+    box-shadow:0 -4px 20px rgba(0,0,0,0.25);
+    transition:0.6s;
+    font-family:"Playfair Display", serif;
+    text-align:center;
+}
+.popup.show {
+    bottom:0;
+}
+.popup button {
+    padding:12px 34px;
+    background:#c26a6a;
+    color:white;
+    border-radius:12px;
+    border:none;
+    font-size:18px;
+}
+
+/* Profile animation (scroll-triggered, vuông/chữ nhật) */
+.profile {
+    width:280px;
+    margin:30px auto;
+    text-align:center;
+    opacity:0;
+}
+.profile img {
+    width:100%;
+    height:auto;
+    border-radius:12px; /* Không tròn hoàn toàn */
+    box-shadow:0 4px 18px rgba(0,0,0,0.1);
+}
+.profile-name {
+    margin-top:12px;
+    font-family:"Great Vibes", cursive;
+    font-size:28px;
+    color:#b55b5b;
+}
+.groom { transform:translateX(-50px); }
+.bride { transform:translateX(50px); }
+.profile.show { opacity:1; transform:translateX(0); transition: all 1s ease; }
+
+/* Wedding Calendar */
+/* Wedding Calendar – phiên bản đẹp, sang */
+.wedding-calendar {
+    width: 92%;
+    max-width: 420px;
+    margin: 50px auto;
+    padding: 25px 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.08);
+}
+
+.wedding-calendar h2 {
+    color: #c45b5b;
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 18px;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+/* Ô ngày chung */
+.day {
+    padding: 14px 0;
+    background: #faf8f6;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #6a5f5f;
+    font-weight: 500;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    transition: all 0.25s ease;
+}
+
+.day:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+/* Ngày cưới */
+.wedding-day {
+    background: #ffe5e8;
+    color: #b5424b;
+    font-weight: 600;
+    position: relative;
+    animation: pulse 1.6s infinite ease-in-out;
+    border: 2px solid #f8b5bd;
+}
+
+.wedding-day::after {
+    content: "❤️";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    font-size: 20px;
+    animation: heartBeat 1.4s infinite;
+}
+
+/* Animation dịu nhẹ */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    40% { transform: scale(1.3); }
+}
+
+
+/* Khi scroll vào khung nhìn -> thêm class 'active' */
+/* Trạng thái ban đầu */
+.wedding-day {
+    background: #faf8f6 !important;
+    color: #6a5f5f !important;
+    border: none !important;
+    position: relative;
+    transition: background 2s ease, color 2s ease, border 2s ease; /* chậm gấp đôi */
+}
+
+.wedding-day::after {
+    content: "";
     opacity: 0;
-    transform: translateY(20px);
-    transition: all 1s ease;
+    transform: scale(0.4);
+    transition: opacity 1.6s ease, transform 1.6s ease; /* chậm gấp đôi */
+    position: absolute;
+    top: -10px;
+    right: -10px;
 }
-.fade-show {
+
+/* Khi active */
+.wedding-day.active {
+    background: #ffe5e8 !important;
+    color: #b5424b !important;
+    border: 2px solid #f8b5bd !important;
+}
+
+.wedding-day.active::after {
+    content: "❤️";
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Nhịp tim sau khi highlight */
+.wedding-day.active.heartbeat {
+    animation: pulse 1.6s infinite ease-in-out;
+}
+
+.wedding-day.active.heartbeat::after {
+    animation: heartBeat 1.4s infinite;
+}
+
+
+
+
+/* Giới thiệu cô dâu chú rể */
+.profile {
+    width:280px;
+    margin:40px auto;
+    text-align:center;
+    position:relative;
+    opacity:0;
+}
+
+.profile img {
+    width:100%;
+    height:auto;
+    border-radius:16px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.1);
+    display:block;
+}
+
+.profile-text {
+    margin-top:12px;
+}
+
+.profile-text .title {
+    font-size:16px;
+    font-family:"Playfair Display", serif;
+    color:#b07a7a;
+    letter-spacing:1px;
+}
+
+.profile-text .name {
+    font-size:32px;
+    font-family:"Great Vibes", cursive;
+    color:#b55b5b;
+    margin-top:4px;
+}
+
+
+/* --- OUR MEMORY SECTION --- */
+.memory-section {
+    width: 92%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.memory-title {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+    color: #b55b5b;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+/* Item ẩn ban đầu */
+.memory-item {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 1.2s ease;
+}
+
+.memory-item.show {
     opacity: 1;
     transform: translateY(0);
 }
 
-header {
-    text-align: center;
-    padding: 120px 20px;
-    background-image: url('https://images.unsplash.com/photo-1529634806980-7a105b1b2031');
-    background-size: cover;
-    background-position: center;
-    color: white;
-}
-
-header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 48px;
-    text-shadow: 0 3px 8px rgba(0,0,0,0.4);
-}
-
-#countdown {
-    font-size: 26px;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-section {
-    max-width: 850px;
-    margin: 50px auto;
-    padding: 25px;
-    background: white;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-}
-
-.title {
-    text-align: center;
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    color: #b37a5c;
-    margin-bottom: 20px;
-}
-
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
-    gap: 15px;
-}
-.gallery img {
+.memory-item img {
     width: 100%;
-    border-radius: 10px;
-    transition: transform .3s;
-}
-.gallery img:hover {
-    transform: scale(1.05);
-}
-
-#music-btn {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #b37a5c;
-    border: none;
-    color: white;
-    font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
-
-.qr {
-    text-align: center;
-    margin-top: 25px;
-}
-.qr img {
-    width: 180px;
     height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.15);
 }
-header h1, header h3 {
-    color: #fff; /* màu cơ bản */
-    text-shadow: 
-        2px 2px 5px rgba(0,0,0,0.5),
-        0 0 10px rgba(255,0,0,0.3);
+
+/*time line */
+.timeline-section {
+  text-align: center;
+  padding: 30px 0;
+  font-family: 'Segoe UI', sans-serif;
 }
+
+.timeline-title {
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.timeline-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 35px;
+  position: relative;
+}
+
+.timeline-item .icon {
+  width: 48px;
+  margin-bottom: 10px;
+}
+
+.timeline-item .time {
+  font-size: 18px;
+  font-weight: bold;
+  color: #0a3a5a;
+}
+
+.timeline-item .text {
+  font-size: 17px;
+  color: #333;
+}
+
+/* Tạo đường thẳng nối timeline */
+.timeline-item::after {
+  content: "";
+  width: 2px;
+  height: 40px;
+  background: #cce0f5;
+  position: absolute;
+  top: 100%;
+}
+
+.timeline-item:last-child::after {
+  display: none;
+}
+
+
 </style>
 </head>
-
 <body>
 
-<canvas id="petals-canvas"></canvas>
+<!-- Slider ảnh cưới -->
+<div class="slider">
+    <div class="slide active"><img src="image/ATN04684.jpg"></div>
+        <div class="slide"><img src="image/ATN04158.jpg"></div>
+        <div class="slide"><img src="image/ATN03952.jpg"></div>
+</div>
 
+<!-- Lời mời cưới -->
+<div class="invite">
+    <div class="invite-title">Trân trọng kính mời</div>
+    <div class="names">Quỳnh & Lý</div>
+    <p>Đến dự lễ thành hôn của chúng tôi</p>
+    <p>Ngày <b>07/12/2025</b></p>
+    <p>Tại <b>Nhà hàng Công Luận 1 – Văn Giang – Hưng Yên</b></p>
+</div>
 
-<audio id="bg-music" loop>
-    <source src="hpcc.mp3" type="audio/mpeg">
-</audio>
-
-<button id="music-btn" style="
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: #b37a5c;
-    border: none;
-    color: white;
-    font-size: 18px;
-    padding: 12px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-">
-🎵 Bật nhạc
-</button>
-
-<header class="fade-section">
-    <h1>Lễ Thành Hôn</h1>
-    <h3>Phạm Thị Lý & Đỗ Văn Quỳnh</h3>
-    <div id="countdown"></div>
-</header>
-
-<section class="fade-section">
-    <div class="title">Câu Chuyện Tình Yêu</div>
-    <p style="text-align:center; line-height:1.7;">
-        Tình yêu của chúng tôi bắt đầu từ những điều giản dị nhất.  
-        Đi qua những ngày nắng đẹp và cả những ngày mưa,  
-        chúng tôi nhận ra rằng:  
-        <b>“Điều quý giá nhất là khi luôn có nhau ở đó.”</b>  
-        <br><br>
-        Và hôm nay, chúng tôi hạnh phúc mời bạn chung vui  
-        trong khoảnh khắc thiêng liêng của cuộc đời mình.
-    </p>
-</section>
-
-<section class="fade-section">
-    <div class="title">Album Ảnh</div>
-    <div class="gallery">
-        <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e" alt="">
-        <img src="https://images.unsplash.com/photo-1520813792240-56fc4a3765a7" alt="">
-        <img src="https://images.unsplash.com/photo-1495567720989-cebdbdd97913" alt="">
-        <img src="https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b" alt="">
+<!-- Giới thiệu chú rể -->
+<div class="profile groom">
+    <img src="image/ATN04398.jpg" alt="Chú rể">
+    <div class="profile-text">
+        <div class="title">Chú rể</div>
+        <div class="name">Văn Quỳnh</div>
     </div>
+</div>
+
+<!-- Giới thiệu cô dâu -->
+<div class="profile bride">
+    <img src="image/ATN03694.jpg" alt="Cô dâu">
+    <div class="profile-text">
+        <div class="title">Cô dâu</div>
+        <div class="name">Phạm Lý</div>
+    </div>
+</div>
+
+
+
+<!-- Wedding Calendar -->
+<div class="wedding-calendar">
+    <h2>📅 Tháng 12/2025</h2>
+    <div class="calendar-grid" id="calendar"></div>
+</div>
+
+<!-- Time line -->
+<section class="timeline-section">
+  <h2 class="timeline-title">Timeline</h2>
+
+  <div class="timeline-item">
+    <img src="icons/camera.svg" class="icon">
+    <div class="time">08:00</div>
+    <div class="text">Lễ đính hôn</div>
+  </div>
+
+  <div class="timeline-item">
+    <img src="icons/rings.svg" class="icon">
+    <div class="time">14:00</div>
+    <div class="text">Đón dâu</div>
+  </div>
+
+  <div class="timeline-item">
+    <img src="icons/champagne.svg" class="icon">
+    <div class="time">15:00</div>
+    <div class="text">Lễ thành hôn</div>
+  </div>
+
+  <div class="timeline-item">
+    <img src="icons/dinner.svg" class="icon">
+    <div class="time">16:00</div>
+    <div class="text">Khai tiệc</div>
+  </div>
 </section>
 
-<section class="fade-section">
-    <div class="title">Thông Tin Lễ Cưới</div>
-    <p style="text-align:center; font-size:20px; line-height:1.6;">
-        📅 <b>Ngày cưới:</b> 07/12/2025 <br>
-        📍 <b>Địa điểm:</b> Công luận 1, TT Văn Giang, Hưng Yên
-    </p>
-    <div class="qr">
-        <p>Quét mã để mở thiệp mời</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://your-wedding-site.com">
+
+<!-- OUR MEMORY -->
+<div class="memory-section">
+    <h2 class="memory-title">Our Memory</h2>
+
+    <div class="memory-grid">
+        <div class="memory-item"><img src="image/ATN04815.jpg"></div>
+        <div class="memory-item"><img src="image/ATN04957.jpg"></div>
+        <div class="memory-item"><img src="image/ATN04182.jpg"></div>
+        <div class="memory-item"><img src="image/ATN04350.jpg"></div>
+        <div class="memory-item"><img src="image/ATN05432.jpg"></div>
+        <div class="memory-item"><img src="image/ATN05336.jpg"></div>
     </div>
-</section>
+</div>
+
+
+<!-- Popup RSVP -->
+<div class="popup" id="popup">
+    <h2>Bạn có tham dự đám cưới không?</h2>
+    <button onclick="closePopup()">Tôi sẽ tham dự</button>
+</div>
 
 <script>
-/* Đếm ngược */
-const weddingDate = new Date("2025-12-07T00:00:00").getTime();
-setInterval(() => {
-    const now = Date.now();
-    const remain = weddingDate - now;
-    const d = Math.floor(remain / (1000*60*60*24));
-    const h = Math.floor((remain%(1000*60*60*24))/(1000*60*60));
-    const m = Math.floor((remain%(1000*60*60))/(1000*60));
-    const s = Math.floor((remain%(1000*60))/1000);
+// Slider auto
+let index=0;
+const slides=document.querySelectorAll(".slide");
+setInterval(()=>{
+    slides[index].classList.remove("active");
+    index=(index+1)%slides.length;
+    slides[index].classList.add("active");
+},3500);
 
-    document.getElementById("countdown").innerHTML =
-        remain > 0 ?
-        `Còn ${d} ngày ${h} giờ ${m} phút ${s} giây` :
-        "Hôm nay là ngày trọng đại!";
-}, 1000);
-
-const music = document.getElementById("bg-music");
-const btn = document.getElementById("music-btn");
-let playing = false;
-
-function startMusic() {
-    music.play().then(() => {
-        playing = true;
-        btn.textContent = "🔇 Tắt nhạc";
-    }).catch(err => {
-        console.log("Autoplay bị chặn, cần bấm nút:", err);
-    });
-}
-
-// Tự click thử khi trang load (desktop Chrome có thể autoplay)
-window.addEventListener("load", () => {
-    startMusic();
-});
-
-btn.onclick = () => {
-    if (!playing) {
-        music.play().catch(err => console.log("Không thể phát nhạc:", err));
-        btn.textContent = "🔇 Tắt nhạc";
-    } else {
-        music.pause();
-        btn.textContent = "🎵 Bật nhạc";
+// Popup scroll cuối trang
+window.addEventListener("scroll",()=>{
+    if(window.innerHeight+window.scrollY>=document.body.offsetHeight){
+        document.getElementById("popup").classList.add("show");
     }
-    playing = !playing;
-};
+});
+function closePopup(){document.getElementById("popup").classList.remove("show");}
 
+// Calendar
+const weddingDay=7;
+const weddingMonth=12;
+const weddingYear=2025;
+function daysInMonth(month,year){return new Date(year,month,0).getDate();}
+const calendar=document.getElementById("calendar");
+const totalDays=daysInMonth(weddingMonth,weddingYear);
+for(let i=1;i<=totalDays;i++){
+    const dayDiv=document.createElement("div");
+    dayDiv.classList.add("day");
+    dayDiv.innerHTML=`<span class="day-number">${i}</span>`;
+    if(i===weddingDay){dayDiv.classList.add("wedding-day");}
+    calendar.appendChild(dayDiv);
+}
 
+// Hiện highlight ngày cưới khi scroll tới lịch
+const weddingCell = document.querySelector(".wedding-day");
 
-/* Fade-in */
-const sections = document.querySelectorAll(".fade-section");
-function showOnScroll() {
-    const trigger = window.innerHeight * 0.85;
-    sections.forEach(sec => {
-        if (sec.getBoundingClientRect().top < trigger)
-            sec.classList.add("fade-show");
+const calendarObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+
+            // Bật highlight
+            weddingCell.classList.add("active");
+
+            // Bật nhịp tim sau 1 giây (chờ highlight xong)
+            setTimeout(() => {
+                weddingCell.classList.add("heartbeat");
+            }, 4000);
+
+            calendarObserver.unobserve(entry.target);
+        }
     });
-}
-window.addEventListener("scroll", showOnScroll);
-showOnScroll();
+}, { threshold: 0.4 });
 
-/* 🌹 CÁNH HOA HỒNG RƠI TRÊN NỀN (Canvas) */
-const canvas = document.getElementById("petals-canvas");
-const ctx = canvas.getContext("2d");
+calendarObserver.observe(document.querySelector(".wedding-calendar"));
 
-function resizeCanvas() {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
 
-const petals = [];
-const petalImage = new Image();
-petalImage.src = "https://i.ibb.co/NsY0tqQ/rose-petal.png"; // Cánh hoa hồng thật PNG nền trong suốt
 
-for (let i = 0; i < 50; i++) {
-    petals.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height,
-        size: Math.random()*20 + 15,
-        speedY: Math.random()*1 + 0.5,
-        speedX: Math.random()*1 - 0.5,
-        rotation: Math.random()*360,
-        rotationSpeed: Math.random()*2 - 1
+// Scroll-trigger animation for profiles
+const profiles=document.querySelectorAll(".profile");
+const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting){
+            entry.target.classList.add("show");
+            observer.unobserve(entry.target);
+        }
     });
-}
+},{threshold:0.5});
+profiles.forEach(profile=>observer.observe(profile));
 
-function drawPetals() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    petals.forEach(p => {
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation * Math.PI/180);
-        ctx.drawImage(petalImage, -p.size/2, -p.size/2, p.size, p.size);
-        ctx.restore();
 
-        p.y += p.speedY;
-        p.x += p.speedX;
-        p.rotation += p.rotationSpeed;
+// Animation cho Our Memory (scroll vào mới hiện)
+const memoryItems = document.querySelectorAll(".memory-item");
 
-        if (p.y > canvas.height) p.y = -20;
-        if (p.x > canvas.width) p.x = -20;
-        if (p.x < -20) p.x = canvas.width + 20;
+const memoryObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add("show");
+        }
     });
-    requestAnimationFrame(drawPetals);
-}
+}, { threshold: 0.3 });
 
-petalImage.onload = drawPetals;
-
+memoryItems.forEach((item, index) => {
+    // Thêm delay cho từng ảnh
+    item.style.transitionDelay = (index * 0.15) + "s";
+    memoryObserver.observe(item);
+});
 
 
 </script>
-
 </body>
 </html>
