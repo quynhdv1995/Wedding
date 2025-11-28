@@ -338,6 +338,12 @@ body {
     animation: heartBeat 1.4s infinite;
 }
 
+.day.highlight {
+    background-color: #c19a6b;
+    color: #fff;
+    border-radius: 50%;
+}
+
 
 
 
@@ -601,6 +607,10 @@ window.addEventListener('scroll', checkReveal);
 window.addEventListener('load', checkReveal); // hiển thị luôn nếu đã ở vị trí
 
 
+document.addEventListener("DOMContentLoaded", function() {
+    const day7 = document.querySelector(".day-7");
+    if(day7) day7.classList.add("highlight");
+});
 
 </script>
 </body>
