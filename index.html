@@ -747,16 +747,24 @@ calendarObserver.observe(document.querySelector(".wedding-calendar"));
 
 
 // Scroll-trigger animation for profiles
-const profiles=document.querySelectorAll(".profile");
-const observer=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-        if(entry.isIntersecting){
-            entry.target.classList.add("show");
-            observer.unobserve(entry.target);
-        }
-    });
-},{threshold:0.5});
-profiles.forEach(profile=>observer.observe(profile));
+const profiles = document.querySelectorAll(".profile");
+
+const middleObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("show");
+      middleObserver.unobserve(entry.target); // chỉ chạy 1 lần
+    }
+  });
+}, {
+  root: null,                     // viewport
+  threshold: 0,                   // bất kỳ phần nào chạm vùng là OK
+  rootMargin: "-50% 0px -50% 0px" // vùng kích hoạt là đoạn giữa viewport (từ 50% đến 50%)
+});
+
+// bắt đầu quan sát
+profiles.forEach(p => middleObserver.observe(p));
+
 
 
 // Animation cho Our Memory (scroll vào mới hiện)
