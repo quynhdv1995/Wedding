@@ -459,28 +459,63 @@ body {
 
 /* Popup RSVP */
 .popup {
-    position:fixed;
-    bottom:-100%;
-    left:0;
-    width:100%;
-    background:white;
-    padding:30px;
-    border-radius:25px 25px 0 0;
-    box-shadow:0 -4px 20px rgba(0,0,0,0.25);
-    transition:0.6s;
-    font-family:"Playfair Display", serif;
-    text-align:center;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: #fff7f2;
+  padding: 30px 25px;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  transition: transform 0.4s ease;
+  z-index: 9999;
 }
-.popup.show {
-    bottom:0;
+
+.popup.active {
+  transform: translate(-50%, -50%) scale(1);
 }
+
+.popup h2 {
+  color: #c19a6b;
+  font-family: "Playfair Display", serif;
+  margin-bottom: 20px;
+}
+
+.popup input {
+  width: 90%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
 .popup button {
-    padding:12px 34px;
-    background:#c26a6a;
-    color:white;
-    border-radius:12px;
-    border:none;
-    font-size:18px;
+  padding: 10px 20px;
+  background-color: #c19a6b;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.popup .close-btn {
+  background: #aaa;
+  margin-top: 15px;
+}
+
+.popup button:hover {
+  opacity: 0.9;
+}
+
+
+.popup.show { /* phải trùng với JS */
+    transform: translate(-50%, -50%) scale(1);
 }
 
 
@@ -490,7 +525,7 @@ body {
 
 <!-- Slider ảnh cưới -->
 <div class="slider">
-    <div class="slide active"><img src="image/ATN04426.jpg"></div>
+    <div class="slide active"><img src="image/ATN04426.JPG"></div>
         <div class="slide"><img src="image/ATN04158.jpg"></div>
         <div class="slide"><img src="image/ATN03952.jpg"></div>
 </div>
@@ -505,7 +540,7 @@ body {
 
 <!-- Giới thiệu chú rể -->
 <div class="profile groom">
-    <img src="image/ATN04398.jpg" alt="Chú rể">
+    <img src="image/ATN04398.JPG" alt="Chú rể">
     <div class="profile-text">
         <div class="title">Chú rể</div>
         <div class="name">Văn Quỳnh</div>
@@ -514,7 +549,7 @@ body {
 
 <!-- Giới thiệu cô dâu -->
 <div class="profile bride">
-    <img src="image/ATN03694.jpg" alt="Cô dâu">
+    <img src="image/ATN03694.JPG" alt="Cô dâu">
     <div class="profile-text">
         <div class="title">Cô dâu</div>
         <div class="name">Phạm Lý</div>
@@ -600,9 +635,25 @@ body {
 
 <!-- Popup RSVP -->
 <div class="popup" id="popup">
-    <h2>Bạn có tham dự đám cưới không?</h2>
-    <button onclick="closePopup()">Tôi sẽ tham dự</button>
+  <h2>Bạn có tham dự đám cưới không?</h2>
+  <form action="https://docs.google.com/forms/d/e/1FAIpQLSfbngSbxP98S4s_lzIuqTwhlaqOzgQ3E3dIMROeSzq9qJw7vA/formResponse" 
+        method="POST" target="hidden_iframe" id="rsvp-form">
+    <input type="text" name="entry.123456" placeholder="Tên của bạn" required>
+    <input type="email" name="entry.654321" placeholder="Email của bạn" required>
+    <select name="entry.987654" required>
+      <option value="">Bạn có tham dự?</option>
+      <option value="Có">Có</option>
+      <option value="Không">Không</option>
+    </select>
+    <textarea name="entry.111222" placeholder="Lời chúc / Ghi chú"></textarea>
+    <button type="submit">Tôi sẽ tham dự</button>
+  </form>
+  <button class="close-btn" onclick="closePopup()">Đóng</button>
 </div>
+
+<!-- Ẩn iframe để submit form -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
 
 <script>
 // Slider auto
@@ -615,12 +666,38 @@ setInterval(()=>{
 },3500);
 
 // Popup scroll cuối trang
-window.addEventListener("scroll",()=>{
-    if(window.innerHeight+window.scrollY>=document.body.offsetHeight){
+// Popup xuất hiện khi scroll tới cuối trang
+window.addEventListener("scroll", () => {
+    if(window.innerHeight + window.scrollY >= document.body.offsetHeight){
         document.getElementById("popup").classList.add("show");
     }
 });
-function closePopup(){document.getElementById("popup").classList.remove("show");}
+
+function closePopup() {
+    document.getElementById("popup").classList.remove("show");
+}
+
+// Submit form vào Google Sheet
+const form = document.getElementById("rsvp-form");
+form.addEventListener("submit", e => {
+    e.preventDefault();
+    const data = new FormData(form);
+
+    fetch("https://docs.google.com/forms/d/e/1FAIpQLSfbngSbxP98S4s_lzIuqTwhlaqOzgQ3E3dIMROeSzq9qJw7vA/formResponse", {
+        method: "POST",
+        body: data
+    })
+    .then(() => {
+        alert("Cảm ơn bạn, thông tin đã được gửi!");
+        closePopup();
+    })
+    .catch(err => 
+		console.log(err)
+		
+	);
+});
+
+
 
 // Calendar
 const weddingDay=7;
