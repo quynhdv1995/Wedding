@@ -20,7 +20,7 @@ body {
 /* Slider */
 .slider {
     width:92%;
-    height:65vh;
+    height:75vh;
     margin:20px auto;
     position:relative;
     overflow:hidden;
@@ -44,6 +44,13 @@ body {
     object-position:center top;
     border-radius:20px;
 }
+.slider .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;        /* Giúp ảnh fill khung */
+    object-position: center;  /* Căn giữa ảnh giống background-position: center */
+}
+
 
 /* Lời mời */
 .invite-title {
@@ -60,6 +67,19 @@ body {
     color:#b55b5b;
     margin:10px 0 20px 0;
 }
+
+.invite-date {
+    font-size: 22px;
+    color: #c19a6b;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+.invite-date span {
+    padding: 0 6px;
+}
+
 
 /* Popup RSVP */
 .popup {
@@ -86,6 +106,7 @@ body {
     border:none;
     font-size:18px;
 }
+
 
 /* Profile animation (scroll-triggered, vuông/chữ nhật) */
 .profile {
@@ -266,6 +287,73 @@ body {
 }
 
 
+/* Mời */
+.invite-content {
+    text-align: center;
+    margin-top: 30px;
+    font-family: "Playfair Display", serif;
+    color: #5a4637;
+}
+
+.invite-text {
+    font-size: 20px;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    color: #8c6e55;
+}
+
+.family-block {
+    margin-bottom: 18px;
+}
+
+.family-block p {
+    margin: 3px 0;
+    font-size: 18px;
+}
+
+.family-block .address {
+    font-size: 16px;
+    font-style: italic;
+    color: #7a6758;
+}
+
+.invite-content {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 1.2s ease forwards;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.shimmer {
+    background: linear-gradient(
+        90deg,
+        #bfa27a,    /* vàng đồng */
+        #e7d0a5,    /* vàng nhạt */
+        #bfa27a
+    );
+    background-size: 200%;
+    -webkit-background-clip: text; /* cho chữ hiển thị gradient */
+    color: transparent;             /* ẩn màu chữ thật */
+    animation: shimmerMove 3s linear infinite;
+}
+
+@keyframes shimmerMove {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+
+
+
+
 /* --- OUR MEMORY SECTION --- */
 .memory-section {
     width: 92%;
@@ -307,57 +395,7 @@ body {
     box-shadow: 0 4px 18px rgba(0,0,0,0.15);
 }
 
-/*time line */
-.timeline-section {
-  text-align: center;
-  padding: 30px 0;
-  font-family: 'Segoe UI', sans-serif;
-}
 
-.timeline-title {
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  font-style: italic;
-}
-
-.timeline-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 35px;
-  position: relative;
-}
-
-.timeline-item .icon {
-  width: 48px;
-  margin-bottom: 10px;
-}
-
-.timeline-item .time {
-  font-size: 18px;
-  font-weight: bold;
-  color: #0a3a5a;
-}
-
-.timeline-item .text {
-  font-size: 17px;
-  color: #333;
-}
-
-/* Tạo đường thẳng nối timeline */
-.timeline-item::after {
-  content: "";
-  width: 2px;
-  height: 40px;
-  background: #cce0f5;
-  position: absolute;
-  top: 100%;
-}
-
-.timeline-item:last-child::after {
-  display: none;
-}
 
 
 </style>
@@ -366,19 +404,18 @@ body {
 
 <!-- Slider ảnh cưới -->
 <div class="slider">
-    <div class="slide active"><img src="image/ATN04684.jpg"></div>
+    <div class="slide active"><img src="image/ATN04426.jpg"></div>
         <div class="slide"><img src="image/ATN04158.jpg"></div>
         <div class="slide"><img src="image/ATN03952.jpg"></div>
 </div>
 
 <!-- Lời mời cưới -->
 <div class="invite">
-    <div class="invite-title">Trân trọng kính mời</div>
-    <div class="names">Quỳnh & Lý</div>
-    <p>Đến dự lễ thành hôn của chúng tôi</p>
-    <p>Ngày <b>07/12/2025</b></p>
-    <p>Tại <b>Nhà hàng Công Luận 1 – Văn Giang – Hưng Yên</b></p>
+    <div class="invite-title">Văn Quỳnh & Phạm Lý</div>
+    <div class="names">Thư mời tiệc cưới</div>
+    <p class="invite-date"><span>16h</span> • <span>07/12/2025</span></p>
 </div>
+
 
 <!-- Giới thiệu chú rể -->
 <div class="profile groom">
@@ -398,6 +435,26 @@ body {
     </div>
 </div>
 
+<!-- Mời -->
+<div class="invite-content">
+    <p class="invite-text shimmer">
+    Trân trọng kính mời Quý khách<br>
+    tới tham dự lễ cưới của <b>Văn Quỳnh & Phạm Lý</b>
+</p>
+
+
+    <div class="family-block">
+        <p><b>Nhà trai:</b> Đỗ Văn Nhàn & Nguyễn Thị Nhẫn</p>
+        <p class="address">(Đội 7, thôn Công Luận 1, Văn Giang, Hưng Yên)</p>
+    </div>
+
+    <div class="family-block">
+        <p><b>Nhà gái:</b> Phạm Văn Vinh & Trần Thị Duyên</p>
+        <p class="address">(Thôn Nam Đồng Nam, Nam Thắng, Tiền Hải, Thái Bình)</p>
+    </div>
+</div>
+
+
 
 
 <!-- Wedding Calendar -->
@@ -406,33 +463,11 @@ body {
     <div class="calendar-grid" id="calendar"></div>
 </div>
 
-<!-- Time line -->
-<section class="timeline-section">
-  <h2 class="timeline-title">Timeline</h2>
-
-  <div class="timeline-item">
-    <img src="image/1.png" class="icon">
-    <div class="time">08:00</div>
-    <div class="text">Lễ đính hôn</div>
-  </div>
-
-  <div class="timeline-item">
-    <img src="image/3.png" class="icon">
-    <div class="time">13:00</div>
-    <div class="text">Lễ thành hôn</div>
-  </div>
-
-  <div class="timeline-item">
-    <img src="image/4.png" class="icon">
-    <div class="time">15:00</div>
-    <div class="text">Khai tiệc</div>
-  </div>
-</section>
 
 
 <!-- OUR MEMORY -->
 <div class="memory-section">
-    <h2 class="memory-title">Our Memory</h2>
+    <h2 class="memory-title">Album ảnh cưới</h2>
 
     <div class="memory-grid">
         <div class="memory-item"><img src="image/ATN04815.jpg"></div>
@@ -502,7 +537,7 @@ const calendarObserver = new IntersectionObserver(entries => {
             calendarObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.4 });
+}, { threshold: 1 });
 
 calendarObserver.observe(document.querySelector(".wedding-calendar"));
 
