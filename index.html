@@ -554,14 +554,14 @@ const calendarObserver = new IntersectionObserver(entries => {
             calendarObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 1 });
+}, { threshold: 0.8 });
 
 calendarObserver.observe(document.querySelector(".wedding-calendar"));
 
 
 
 // Scroll-trigger animation for profiles
-const profiles=document.querySelectorAll(".profile");
+const profiles=document.querySelectorAll(".pofile");
 const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
         if(entry.isIntersecting){
