@@ -554,7 +554,7 @@ const calendarObserver = new IntersectionObserver(entries => {
             calendarObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.7 });
+}, { threshold: 1 });
 
 calendarObserver.observe(document.querySelector(".wedding-calendar"));
 
