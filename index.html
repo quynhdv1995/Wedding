@@ -662,6 +662,10 @@ body {
 <!-- Ẩn iframe để submit form -->
 <iframe name="hidden_iframe" style="display:none;"></iframe>
 
+<audio id="bgm" autoplay muted loop>
+  <source src="audio/Hocayeu.mp3" type="audio/mpeg">
+</audio>
+
 
 <script>
 // Slider auto
@@ -832,6 +836,16 @@ setInterval(updateCountdown, 1000);
 updateCountdown();
 
 
+function enableSound() {
+  const bgm = document.getElementById("bgm");
+  bgm.muted = false;
+  bgm.play();
+  window.removeEventListener("scroll", enableSound);
+  window.removeEventListener("click", enableSound);
+}
+
+window.addEventListener("scroll", enableSound, { once: true });
+window.addEventListener("click", enableSound, { once: true });
 </script>
 </body>
 </html>
