@@ -837,15 +837,15 @@ updateCountdown();
 
 
 function enableSound() {
-  const bgm = document.getElementById("bgm");
-  bgm.muted = false;
-  bgm.play();
-  window.removeEventListener("scroll", enableSound);
-  window.removeEventListener("click", enableSound);
+  const audio = document.getElementById("bgm");
+  audio.muted = false;
+  audio.play();
+  document.removeEventListener("touchstart", enableSound);
+  document.removeEventListener("click", enableSound);
 }
 
-window.addEventListener("scroll", enableSound, { once: true });
-window.addEventListener("click", enableSound, { once: true });
+document.addEventListener("touchstart", enableSound, { once: true });
+document.addEventListener("click", enableSound, { once: true });
 </script>
 </body>
 </html>
