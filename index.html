@@ -545,6 +545,88 @@ body {
     100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
 
+/* Overlay nền mờ */
+.popup-overlay {
+  display: none;   /* ẩn popup mặc định */
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Box trung tâm popup */
+.popup-box {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  animation: popupAppear 0.3s ease-out;
+}
+
+/* Animation xuất hiện */
+@keyframes popupAppear {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Nút mở Google Form */
+.popup-box button#open-form-btn {
+  background-color: #FF6F61;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px 0;
+  transition: background 0.3s;
+}
+
+.popup-box button#open-form-btn:hover {
+  background-color: #FF3B2E;
+}
+
+/* Nút đóng */
+.popup-box button.close-btn {
+  background: transparent;
+  border: 2px solid #ccc;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  transition: all 0.2s;
+}
+
+.popup-box button.close-btn:hover {
+  border-color: #888;
+  color: #333;
+}
+
+/* Nút mở popup */
+#show-popup {
+  background-color: #FF6F61;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+#show-popup:hover {
+  background-color: #FF3B2E;
+}
+
+
 </style>
 </head>
 <body>
@@ -659,26 +741,20 @@ body {
 </div>
 
 
-<!-- Popup RSVP -->
-<div class="popup" id="popup">
-  <h2>Bạn có tham dự đám cưới không?</h2>
-  <form action="https://docs.google.com/forms/d/e/1FAIpQLSfbngSbxP98S4s_lzIuqTwhlaqOzgQ3E3dIMROeSzq9qJw7vA/formResponse" 
-        method="POST" target="hidden_iframe" id="rsvp-form">
-    <input type="text" name="entry.123456" placeholder="Tên của bạn" required>
-    <input type="email" name="entry.654321" placeholder="Email của bạn" required>
-    <select name="entry.987654" required>
-      <option value="">Bạn có tham dự?</option>
-      <option value="Có">Có</option>
-      <option value="Không">Không</option>
-    </select>
-    <textarea name="entry.111222" placeholder="Lời chúc / Ghi chú"></textarea>
-    <button type="submit">Tôi sẽ tham dự</button>
-  </form>
-  <button class="close-btn" onclick="closePopup()">Đóng</button>
+<!-- Popup mở Google Form -->
+<div class="popup-overlay" id="popup-overlay">
+  <div class="popup-box">
+    <h2>Tham dự đám cưới</h2>
+    <p>Chúng tôi rất vui khi bạn tham dự buổi lễ. Vui lòng điền thông tin tham dự để chúng tôi có thể chuẩn bị chu đáo nhất cho bạn.</p>
+    <button id="open-form-btn">Nhấn vào đây để tham dự</button>
+    <button class="close-btn" id="close-popup">Đóng</button>
+  </div>
 </div>
 
-<!-- Ẩn iframe để submit form -->
-<iframe name="hidden_iframe" style="display:none;"></iframe>
+<!-- Nút mở popup -->
+<button id="show-popup">Mở popup đăng ký tham dự</button>
+
+
 
 <audio id="bgm" autoplay muted loop>
   <source src="audio/Hocayeu.mp3" type="audio/mpeg">
@@ -695,37 +771,41 @@ setInterval(()=>{
     slides[index].classList.add("active");
 },3500);
 
-// Popup scroll cuối trang
-// Popup xuất hiện khi scroll tới cuối trang
+const popupOverlay = document.getElementById("popup-overlay");
+const closePopupBtn = document.getElementById("close-popup");
+const openFormBtn = document.getElementById("open-form-btn");
+
+let popupShown = false; // popup chỉ hiện 1 lần
+
 window.addEventListener("scroll", () => {
-    if(window.innerHeight + window.scrollY >= document.body.offsetHeight){
-        document.getElementById("popup").classList.add("show");
+    if (popupShown) return; // nếu đã hiện, bỏ qua
+
+    const scrollTop = window.scrollY || window.pageYOffset; // scroll hiện tại
+    const windowHeight = window.innerHeight; // chiều cao viewport
+    const docHeight = Math.max(
+        document.body.scrollHeight, 
+        document.documentElement.scrollHeight,
+        document.body.offsetHeight,
+        document.documentElement.offsetHeight,
+        document.body.clientHeight,
+        document.documentElement.clientHeight
+    ); // chiều cao thật của trang
+
+    if (scrollTop + windowHeight >= docHeight - 5) { // ±5px
+        popupOverlay.style.display = "flex";
+        popupShown = true;
     }
 });
 
-function closePopup() {
-    document.getElementById("popup").classList.remove("show");
-}
-
-// Submit form vào Google Sheet
-const form = document.getElementById("rsvp-form");
-form.addEventListener("submit", e => {
-    e.preventDefault();
-    const data = new FormData(form);
-
-    fetch("https://docs.google.com/forms/d/e/1FAIpQLSfbngSbxP98S4s_lzIuqTwhlaqOzgQ3E3dIMROeSzq9qJw7vA/formResponse", {
-        method: "POST",
-        body: data
-    })
-    .then(() => {
-        alert("Cảm ơn bạn, thông tin đã được gửi!");
-        closePopup();
-    })
-    .catch(err => 
-		console.log(err)
-		
-	);
+closePopupBtn.addEventListener("click", () => {
+    popupOverlay.style.display = "none";
 });
+
+openFormBtn.addEventListener("click", () => {
+    window.open("https://docs.google.com/forms/d/e/1FAIpQLSe_P6CfJRQj7RyqtdO8jbmzSsDBKdwVq3F72_7N8TdmdU4D2g/viewform", "_blank");
+    popupOverlay.style.display = "none"; // đóng popup khi mở form
+});
+
 
 
 
