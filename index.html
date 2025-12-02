@@ -771,13 +771,10 @@ const popupOverlay = document.getElementById("popup-overlay");
 const closePopupBtn = document.getElementById("close-popup");
 const openFormBtn = document.getElementById("open-form-btn");
 
-let popupShown = false; // popup chỉ hiện 1 lần
-
+// Hiện popup mỗi khi scroll xuống cuối trang
 window.addEventListener("scroll", () => {
-    if (popupShown) return; // nếu đã hiện, bỏ qua
-
-    const scrollTop = window.scrollY || window.pageYOffset; // scroll hiện tại
-    const windowHeight = window.innerHeight; // chiều cao viewport
+    const scrollTop = window.scrollY || window.pageYOffset;
+    const windowHeight = window.innerHeight;
     const docHeight = Math.max(
         document.body.scrollHeight, 
         document.documentElement.scrollHeight,
@@ -785,22 +782,24 @@ window.addEventListener("scroll", () => {
         document.documentElement.offsetHeight,
         document.body.clientHeight,
         document.documentElement.clientHeight
-    ); // chiều cao thật của trang
+    );
 
     if (scrollTop + windowHeight >= docHeight - 5) { // ±5px
         popupOverlay.style.display = "flex";
-        popupShown = true;
     }
 });
 
+// Đóng popup
 closePopupBtn.addEventListener("click", () => {
     popupOverlay.style.display = "none";
 });
 
+// Mở Google Form trong tab mới
 openFormBtn.addEventListener("click", () => {
     window.open("https://docs.google.com/forms/d/e/1FAIpQLSe_P6CfJRQj7RyqtdO8jbmzSsDBKdwVq3F72_7N8TdmdU4D2g/viewform", "_blank");
-    popupOverlay.style.display = "none"; // đóng popup khi mở form
+    popupOverlay.style.display = "none"; 
 });
+
 
 
 
